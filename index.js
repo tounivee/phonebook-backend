@@ -46,6 +46,9 @@ app.use(
   morgan(':method :url :status :res[content-length] - :response-time ms :body')
 )
 
+// First check if the dist directory contains a file corresponding to the request's address
+app.use(express.static('dist'))
+
 app.post('/api/persons', (request, response) => {
   const body = request.body
 
@@ -108,7 +111,7 @@ app.delete('/api/persons/:id', (request, response) => {
   response.status(204).end()
 })
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })

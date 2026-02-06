@@ -1,0 +1,1 @@
+:is(.error,.notice){display:flex;align-items:center;align-content:center;color:red;background:#d3d3d3;font-size:20px;border-style:solid;border-radius:5px;padding:10px;margin-bottom:10px}.notice{color:green}
