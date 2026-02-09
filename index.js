@@ -12,6 +12,7 @@ const unknownEndpoint = (request, response) => {
 
 const errorHandler = (error, request, response, next) => {
   console.error(error.message)
+  console.log('error.name:', error.name)
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
@@ -85,7 +86,6 @@ app.post("/api/persons", async (request, response, next) => {
       // })
   }).catch(error => next(error))
 
-  
 
 })
 
