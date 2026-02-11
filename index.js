@@ -1,13 +1,13 @@
-require("dotenv").config()
-const express = require("express")
-var morgan = require("morgan")
+require('dotenv').config()
+const express = require('express')
+var morgan = require('morgan')
 
-const Person = require("./models/person")
+const Person = require('./models/person')
 
 const app = express()
 
 const unknownEndpoint = (request, response) => {
-  response.status(404).send({ error: "unknown endpoint" })
+  response.status(404).send({ error: 'unknown endpoint' })
 }
 
 const errorHandler = (error, request, response, next) => {
@@ -26,17 +26,17 @@ const errorHandler = (error, request, response, next) => {
 app.use(express.json())
 
 // Create token + Stringify
-morgan.token("body", (req) => {
+morgan.token('body', (req) => {
   return JSON.stringify(req.body)
 })
 
 // Log request
 app.use(
-  morgan(":method :url :status :res[content-length] - :response-time ms :body"),
+  morgan(':method :url :status :res[content-length] - :response-time ms :body'),
 )
 
 // First check if the dist directory contains a file corresponding to the request's address
-app.use(express.static("dist"))
+app.use(express.static('dist'))
 
 app.put('/api/persons/:id', async (request, response, next) => {
   const { name, number } = request.body
@@ -48,8 +48,8 @@ app.put('/api/persons/:id', async (request, response, next) => {
       {
         new: true,
         runValidators: true,
-        context: 'query'
-      }
+        context: 'query',
+      },
     )
 
     if (!updatedPerson) {
@@ -62,34 +62,34 @@ app.put('/api/persons/:id', async (request, response, next) => {
   }
 })
 
-app.post("/api/persons", async (request, response, next) => {
+app.post('/api/persons', async (request, response, next) => {
   const { name, number } = request.body
 
   if (!name) {
     return response.status(400).json({
-      error: "Name is missing",
+      error: 'Name is missing',
     })
   } else if (!number) {
     return response.status(400).json({
-      error: "Number is missing",
+      error: 'Number is missing',
     })
   }
 
-
   const person = new Person({ name, number })
-  person.save().then(result => {
-    console.log(result)
-    response.json(result)
+  person
+    .save()
+    .then((result) => {
+      console.log(result)
+      response.json(result)
       // response.status(201).json({
       //   action: "created",
       //   person: result,
       // })
-  }).catch(error => next(error))
-
-
+    })
+    .catch((error) => next(error))
 })
 
-app.get("/info", async (req, res) => {
+app.get('/info', async (req, res) => {
   const total = await Person.countDocuments()
 
   res.send(`
@@ -98,16 +98,16 @@ app.get("/info", async (req, res) => {
   `)
 })
 
-app.get("/api/persons", (request, response) => {
+app.get('/api/persons', (request, response) => {
   // response.json(persons);
   Person.find({}).then((result) => {
     response.json(result)
   })
 })
 
-app.get("/api/persons/:id", (request, response) => {
+app.get('/api/persons/:id', (request, response) => {
   const id = request.params.id
-  Person.findById(request.params.id)
+  Person.findById(id)
     .then((person) => {
       if (person) {
         response.json(person)
@@ -121,7 +121,7 @@ app.get("/api/persons/:id", (request, response) => {
     })
 })
 
-app.delete("/api/persons/:id", (request, response, next) => {
+app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndDelete(request.params.id)
     .then((result) => {
       console.log(result)

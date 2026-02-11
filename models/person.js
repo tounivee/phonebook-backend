@@ -7,7 +7,7 @@ const url = process.env.MONGODB_URI
 // console.log('connecting to', url)
 mongoose
   .connect(url)
-  .then((result) => {
+  .then(() => {
     console.log('connected to MongoDB')
   })
   .catch((error) => {
@@ -19,12 +19,18 @@ const personSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    minLength: 3
+    minLength: 3,
   },
   number: {
     type: String,
-    required: true
-  }
+    required: true,
+    minLength: 8, // minimum length
+    validate: {
+      validator: function(v) {
+        return /^(\d{2,3})-(\d{5,})$/.test(v) // 2-3 digits, dash, more digits
+      },
+    },
+  },
 })
 
 personSchema.set('toJSON', {
